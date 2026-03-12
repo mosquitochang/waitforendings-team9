@@ -171,7 +171,7 @@
 
       const params = new URLSearchParams(window.location.search);
       const lang = params.get("lang");
-
+      document.title = lang === "sc" ? "最好的结局？" : "最好的結局？";
       const SPRITE_URL = lang === "sc" ? "./sprite-sc.png" : "./sprite-tc.png";
 
       let count = null;
