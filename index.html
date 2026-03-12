@@ -1,182 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="/icon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>最好的結局？</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>最好的結局？</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+      }
 
-    #root {
-      width: 100%;
-      height: 100%;
-    }
+      #root {
+        width: 100%;
+        height: 100%;
+      }
 
-    svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+      svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
 
-    .digit-fo {
-      width: 240px;
-      height: 540px;
-      position: absolute;
-      left: 120px;
-      top: 270px;
-      overflow: visible;
-      opacity: 0;
-    }
-
-    .digit-fo.digits-fade-in {
-      animation: digitsFadeIn 3s ease forwards;
-    }
-
-    @keyframes digitsFadeIn {
-      from {
+      .digit-fo {
+        width: 240px;
+        height: 540px;
+        position: absolute;
+        left: 120px;
+        top: 270px;
+        overflow: visible;
         opacity: 0;
       }
-      to {
+
+      .digit-fo.digits-fade-in {
+        animation: digitsFadeIn 3s ease forwards;
+      }
+
+      @keyframes digitsFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .flip-digit {
+        position: relative;
+        width: 240px;
+        height: 540px;
+        perspective: 1200px;
+        perspective-origin: center center;
+        transform-style: preserve-3d;
+      }
+
+      .half {
+        position: absolute;
+        left: 0;
+        width: 240px;
+        height: 270px;
+        background-repeat: no-repeat;
+        background-size: 1200px 1140px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
+      }
+
+      .top {
+        top: 0;
+        transform-origin: center bottom;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.45);
+      }
+
+      .bottom {
+        top: 270px;
+        transform-origin: center top;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        background-position: 0 -270px;
+      }
+
+      .static-top {
+        z-index: 1;
+      }
+
+      .static-bottom {
+        z-index: 1;
+      }
+
+      .flip-top {
+        z-index: 3;
+        transform: rotateX(0deg);
+        visibility: hidden;
+      }
+
+      .flip-bottom {
+        z-index: 2;
+        transform: rotateX(90deg);
+        visibility: hidden;
+      }
+
+      .flip-top.animating {
+        visibility: visible;
+        animation: flipTop 0.22s ease-in forwards;
+      }
+
+      .flip-bottom.animating {
+        visibility: visible;
+        animation: flipBottom 0.22s ease-out 0.22s forwards;
+      }
+
+      @keyframes flipTop {
+        0% {
+          transform: rotateX(0deg);
+          filter: brightness(1);
+        }
+        100% {
+          transform: rotateX(-90deg);
+          filter: brightness(0.8);
+        }
+      }
+
+      @keyframes flipBottom {
+        0% {
+          transform: rotateX(90deg);
+          filter: brightness(0.72);
+        }
+        100% {
+          transform: rotateX(0deg);
+          filter: brightness(1);
+        }
+      }
+
+      .title-mask-cell {
+        opacity: 0;
+      }
+
+      .title-mask-cell.show {
         opacity: 1;
       }
-    }
 
-    .flip-digit {
-      position: relative;
-      width: 240px;
-      height: 540px;
-      perspective: 1200px;
-      perspective-origin: center center;
-      transform-style: preserve-3d;
-    }
-
-    .half {
-      position: absolute;
-      left: 0;
-      width: 240px;
-      height: 270px;
-      background-repeat: no-repeat;
-      background-size: 1200px 1140px;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform-style: preserve-3d;
-    }
-
-    .top {
-      top: 0;
-      transform-origin: center bottom;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.45);
-    }
-
-    .bottom {
-      top: 270px;
-      transform-origin: center top;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      background-position: 0 -270px;
-    }
-
-    .static-top {
-      z-index: 1;
-    }
-
-    .static-bottom {
-      z-index: 1;
-    }
-
-    .flip-top {
-      z-index: 3;
-      transform: rotateX(0deg);
-      visibility: hidden;
-    }
-
-    .flip-bottom {
-      z-index: 2;
-      transform: rotateX(90deg);
-      visibility: hidden;
-    }
-
-    .flip-top.animating {
-      visibility: visible;
-      animation: flipTop 0.22s ease-in forwards;
-    }
-
-    .flip-bottom.animating {
-      visibility: visible;
-      animation: flipBottom 0.22s ease-out 0.22s forwards;
-    }
-
-    @keyframes flipTop {
-      0% {
-        transform: rotateX(0deg);
-        filter: brightness(1);
+      #start {
+        cursor: pointer;
       }
-      100% {
-        transform: rotateX(-90deg);
-        filter: brightness(0.8);
+
+      #start .hover-arrow {
+        opacity: 0;
       }
-    }
 
-    @keyframes flipBottom {
-      0% {
-        transform: rotateX(90deg);
-        filter: brightness(0.72);
+      #start:hover .hover-arrow {
+        opacity: 1;
       }
-      100% {
-        transform: rotateX(0deg);
-        filter: brightness(1);
-      }
-    }
+    </style>
+  </head>
+  <body>
+    <audio id="bgm" loop>
+      <source src="./bgm.mp3" type="audio/mpeg" />
+    </audio>
+    <div id="root"></div>
 
-    .title-mask-cell {
-      opacity: 0;
-    }
+    <script>
+      const CELL_SIZE = 60;
+      const SPRITE_WIDTH = 240;
+      const SPRITE_HEIGHT = 540;
+      const HALF_HEIGHT = 270;
 
-    .title-mask-cell.show {
-      opacity: 1;
-    }
+      const params = new URLSearchParams(window.location.search);
+      const lang = params.get("lang");
 
-    #start {
-      cursor: pointer;
-    }
+      const SPRITE_URL = lang === "sc" ? "./sprite-sc.png" : "./sprite-tc.png";
 
-    #start .hover-arrow {
-      opacity: 0;
-    }
+      let count = null;
 
-    #start:hover .hover-arrow {
-      opacity: 1;
-    }
-  </style>
-</head>
-<body>
-  <audio id="bgm" loop>
-    <source src="./bgm.mp3" type="audio/mpeg">
-  </audio>
-  <div id="root"></div>
-
-  <script>
-    const CELL_SIZE = 60;
-    const SPRITE_WIDTH = 240;
-    const SPRITE_HEIGHT = 540;
-    const HALF_HEIGHT = 270;
-
-    const params = new URLSearchParams(window.location.search);
-    const lang = params.get("lang");
-
-    const SPRITE_URL = lang === 'sc' ? "./sprite-sc.png" : "./sprite-tc.png";
-
-    let count = null;
-
-    function createStartButton() {
-      return `
+      function createStartButton() {
+        return `
         <svg 
           x="${15 * CELL_SIZE}"
           y="${8 * CELL_SIZE}"
@@ -215,15 +216,15 @@
           </svg>
         </svg>
       `;
-    }
+      }
 
-    function createTitle() {
-      const x = 13 * CELL_SIZE;
-      const y = 2 * CELL_SIZE;
-      const width = 6 * CELL_SIZE;
-      const height = 1 * CELL_SIZE;
+      function createTitle() {
+        const x = 13 * CELL_SIZE;
+        const y = 2 * CELL_SIZE;
+        const width = 6 * CELL_SIZE;
+        const height = 1 * CELL_SIZE;
 
-      return `
+        return `
         <defs>
           <mask id="titleTypingMask">
             <rect x="0" y="0" width="1920" height="1080" fill="black" />
@@ -247,13 +248,13 @@
           <image href="${SPRITE_URL}" width="1200" height="1140" />
         </svg>
       `;
-    }
+      }
 
-    function createDigitForeignObject(index, column) {
-      const x = column * CELL_SIZE;
-      const y = 5 * CELL_SIZE;
+      function createDigitForeignObject(index, column) {
+        const x = column * CELL_SIZE;
+        const y = 5 * CELL_SIZE;
 
-      return `
+        return `
         <foreignObject
           x="${x - SPRITE_WIDTH / 2}"
           y="${y - SPRITE_HEIGHT / 2}"
@@ -270,215 +271,237 @@
           </div>
         </foreignObject>
       `;
-    }
-
-    function getDigitsFixed(num) {
-      const limitedNum = num % 10000;
-      return String(limitedNum).padStart(4, "0").split("").map(Number);
-    }
-
-    function getDigitSpritePos(value) {
-      const col = value % 5;
-      const row = Math.floor(value / 5);
-
-      return {
-        x: -(col * SPRITE_WIDTH),
-        y: -(row * SPRITE_HEIGHT),
-      };
-    }
-
-    function applyDigitHalfBackground(el, value, halfType) {
-      const pos = getDigitSpritePos(value);
-      el.style.backgroundImage = `url("${SPRITE_URL}")`;
-
-      if (halfType === "top") {
-        el.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
-      } else {
-        el.style.backgroundPosition = `${pos.x}px ${pos.y - HALF_HEIGHT}px`;
-      }
-    }
-
-    function wait(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    class FlipDigit {
-      constructor(root, initialValue = 0) {
-        this.root = root;
-        this.staticTop = root.querySelector(".static-top");
-        this.staticBottom = root.querySelector(".static-bottom");
-        this.flipTop = root.querySelector(".flip-top");
-        this.flipBottom = root.querySelector(".flip-bottom");
-        this.currentValue = initialValue;
-
-        this.render(initialValue);
       }
 
-      render(value) {
-        this.currentValue = value;
-
-        applyDigitHalfBackground(this.staticTop, value, "top");
-        applyDigitHalfBackground(this.staticBottom, value, "bottom");
-
-        this.flipTop.classList.remove("animating");
-        this.flipBottom.classList.remove("animating");
-        this.flipTop.style.visibility = "hidden";
-        this.flipBottom.style.visibility = "hidden";
-        this.flipTop.style.transform = "rotateX(0deg)";
-        this.flipBottom.style.transform = "rotateX(90deg)";
+      function getDigitsFixed(num) {
+        const limitedNum = num % 10000;
+        return String(limitedNum).padStart(4, "0").split("").map(Number);
       }
 
-      flipTo(nextValue) {
-        return new Promise((resolve) => {
-          const current = this.currentValue;
+      function getDigitSpritePos(value) {
+        const col = value % 5;
+        const row = Math.floor(value / 5);
 
-          applyDigitHalfBackground(this.flipTop, current, "top");
-          applyDigitHalfBackground(this.flipBottom, nextValue, "bottom");
+        return {
+          x: -(col * SPRITE_WIDTH),
+          y: -(row * SPRITE_HEIGHT),
+        };
+      }
 
-          applyDigitHalfBackground(this.staticTop, nextValue, "top");
-          applyDigitHalfBackground(this.staticBottom, current, "bottom");
+      function applyDigitHalfBackground(el, value, halfType) {
+        const pos = getDigitSpritePos(value);
+        el.style.backgroundImage = `url("${SPRITE_URL}")`;
+
+        if (halfType === "top") {
+          el.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
+        } else {
+          el.style.backgroundPosition = `${pos.x}px ${pos.y - HALF_HEIGHT}px`;
+        }
+      }
+
+      function wait(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      class FlipDigit {
+        constructor(root, initialValue = 0) {
+          this.root = root;
+          this.staticTop = root.querySelector(".static-top");
+          this.staticBottom = root.querySelector(".static-bottom");
+          this.flipTop = root.querySelector(".flip-top");
+          this.flipBottom = root.querySelector(".flip-bottom");
+          this.currentValue = initialValue;
+
+          this.render(initialValue);
+        }
+
+        render(value) {
+          this.currentValue = value;
+
+          applyDigitHalfBackground(this.staticTop, value, "top");
+          applyDigitHalfBackground(this.staticBottom, value, "bottom");
 
           this.flipTop.classList.remove("animating");
           this.flipBottom.classList.remove("animating");
+          this.flipTop.style.visibility = "hidden";
+          this.flipBottom.style.visibility = "hidden";
+          this.flipTop.style.transform = "rotateX(0deg)";
+          this.flipBottom.style.transform = "rotateX(90deg)";
+        }
 
-          void this.flipTop.offsetWidth;
-          void this.flipBottom.offsetWidth;
+        flipTo(nextValue) {
+          return new Promise((resolve) => {
+            const current = this.currentValue;
 
-          this.flipTop.style.visibility = "visible";
-          this.flipBottom.style.visibility = "visible";
+            applyDigitHalfBackground(this.flipTop, current, "top");
+            applyDigitHalfBackground(this.flipBottom, nextValue, "bottom");
 
-          this.flipTop.classList.add("animating");
-          this.flipBottom.classList.add("animating");
+            applyDigitHalfBackground(this.staticTop, nextValue, "top");
+            applyDigitHalfBackground(this.staticBottom, current, "bottom");
 
-          const onEnd = () => {
             this.flipTop.classList.remove("animating");
             this.flipBottom.classList.remove("animating");
-            this.flipTop.style.visibility = "hidden";
-            this.flipBottom.style.visibility = "hidden";
 
-            this.currentValue = nextValue;
-            applyDigitHalfBackground(this.staticTop, nextValue, "top");
-            applyDigitHalfBackground(this.staticBottom, nextValue, "bottom");
+            void this.flipTop.offsetWidth;
+            void this.flipBottom.offsetWidth;
 
-            resolve();
-          };
+            this.flipTop.style.visibility = "visible";
+            this.flipBottom.style.visibility = "visible";
 
-          this.flipBottom.addEventListener("animationend", onEnd, { once: true });
-        });
-      }
+            this.flipTop.classList.add("animating");
+            this.flipBottom.classList.add("animating");
 
-      async animateTo(targetValue) {
-        let current = this.currentValue;
-        while (current !== targetValue) {
-          const next = (current + 1) % 10;
-          playFlipSound();
-          await this.flipTo(next);
-          current = next;
+            const onEnd = () => {
+              this.flipTop.classList.remove("animating");
+              this.flipBottom.classList.remove("animating");
+              this.flipTop.style.visibility = "hidden";
+              this.flipBottom.style.visibility = "hidden";
+
+              this.currentValue = nextValue;
+              applyDigitHalfBackground(this.staticTop, nextValue, "top");
+              applyDigitHalfBackground(this.staticBottom, nextValue, "bottom");
+
+              resolve();
+            };
+
+            this.flipBottom.addEventListener("animationend", onEnd, {
+              once: true,
+            });
+          });
+        }
+
+        async animateTo(targetValue) {
+          let current = this.currentValue;
+          while (current !== targetValue) {
+            const next = (current + 1) % 10;
+            playFlipSound();
+            await this.flipTo(next);
+            current = next;
+          }
         }
       }
-    }
 
-    async function fetchCount() {
-      const params = new URLSearchParams(window.location.search);
-      const mockCount = params.get("count");
+      async function fetchCount() {
+        const params = new URLSearchParams(window.location.search);
+        const mockCount = params.get("count");
 
-      if (mockCount !== null) {
-        return parseInt(mockCount, 10) || 0;
+        if (mockCount !== null) {
+          return parseInt(mockCount, 10) || 0;
+        }
+
+        try {
+          const tagCountApiTc =
+            "https://wgw-api.team9.co/worlds/tag-count?tag=%E6%9C%80%E5%A5%BD%E7%9A%84%E7%B5%90%E5%B1%80%EF%BC%9F";
+          const tagCountApiSc =
+            "https://wgw-api.team9.co/worlds/tag-count?tag=%E6%9C%80%E5%A5%BD%E7%9A%84%E7%BB%93%E5%B1%80%EF%BC%9F";
+
+          const [resTc, resSc] = await Promise.all([
+            fetch(tagCountApiTc),
+            fetch(tagCountApiSc),
+          ]);
+
+          const [dataTc, dataSc] = await Promise.all([
+            resTc.json(),
+            resSc.json(),
+          ]);
+
+          const countTc = dataTc?.count ?? 0;
+          const countSc = dataSc?.count ?? 0;
+
+          return countTc + countSc;
+        } catch (err) {
+          console.error("Failed to fetch count", err);
+          return 0;
+        }
       }
 
-      try {
-        const res = await fetch("https://wgw-api.team9.co/worlds/tag-count?tag=%E6%9C%80%E5%A5%BD%E7%9A%84%E7%B5%90%E5%B1%80%EF%BC%9F");
-        const data = await res.json();
-        return data.count || 0;
-      } catch (err) {
-        console.error("Failed to fetch count", err);
-        return 0;
+      async function flip(targetDigits) {
+        const container = document.getElementById("root");
+        const digitEls = Array.from(container.querySelectorAll(".flip-digit"));
+        const flipDigits = digitEls.map((el) => new FlipDigit(el, 0));
+
+        for (let i = flipDigits.length - 1; i >= 0; i--) {
+          await flipDigits[i].animateTo(targetDigits[i]);
+        }
       }
-    }
 
-    async function flip(targetDigits) {
-      const container = document.getElementById("root");
-      const digitEls = Array.from(container.querySelectorAll(".flip-digit"));
-      const flipDigits = digitEls.map((el) => new FlipDigit(el, 0));
-
-      for (let i = flipDigits.length - 1; i >= 0; i--) {
-        await flipDigits[i].animateTo(targetDigits[i]);
+      async function playDigitsFadeIn() {
+        const digitFos = Array.from(document.querySelectorAll(".digit-fo"));
+        digitFos.forEach((el) => el.classList.add("digits-fade-in"));
+        await wait(3000);
       }
-    }
 
-    async function playDigitsFadeIn() {
-      const digitFos = Array.from(document.querySelectorAll(".digit-fo"));
-      digitFos.forEach((el) => el.classList.add("digits-fade-in"));
-      await wait(3000);
-    }
+      async function playTitleTyping() {
+        const cells = Array.from(
+          document.querySelectorAll("[data-title-cell]"),
+        );
 
-    async function playTitleTyping() {
-      const cells = Array.from(document.querySelectorAll("[data-title-cell]"));
-
-      for (let i = 0; i < cells.length; i++) {
-        playTypeSound();
-        cells[i].classList.add("show");
-        await wait(200);
+        for (let i = 0; i < cells.length; i++) {
+          playTypeSound();
+          cells[i].classList.add("show");
+          await wait(200);
+        }
       }
-    }
 
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioContext = new (
+        window.AudioContext || window.webkitAudioContext
+      )();
 
-    async function loadAudioBuffer(url) {
-      const res = await fetch(url);
-      const arrayBuffer = await res.arrayBuffer();
-      return await audioContext.decodeAudioData(arrayBuffer);
-    }
+      async function loadAudioBuffer(url) {
+        const res = await fetch(url);
+        const arrayBuffer = await res.arrayBuffer();
+        return await audioContext.decodeAudioData(arrayBuffer);
+      }
 
-    function createBufferedSound(buffer, volume = 1) {
-      return {
-        play() {
-          const source = audioContext.createBufferSource();
-          const gainNode = audioContext.createGain();
+      function createBufferedSound(buffer, volume = 1) {
+        return {
+          play() {
+            const source = audioContext.createBufferSource();
+            const gainNode = audioContext.createGain();
 
-          source.buffer = buffer;
-          gainNode.gain.value = volume;
+            source.buffer = buffer;
+            gainNode.gain.value = volume;
 
-          source.connect(gainNode);
-          gainNode.connect(audioContext.destination);
+            source.connect(gainNode);
+            gainNode.connect(audioContext.destination);
 
-          source.start(0);
-        },
-      };
-    }
+            source.start(0);
+          },
+        };
+      }
 
-    let typeSound;
-    let flipSound;
+      let typeSound;
+      let flipSound;
 
-    async function initSounds() {
-      const [typeBuffer, flipBuffer, acceptBuffer] = await Promise.all([
-        loadAudioBuffer("./type.mp3"),
-        loadAudioBuffer("./flip.mp3"),
-        loadAudioBuffer("./accept.mp3"),
-      ]);
+      async function initSounds() {
+        const [typeBuffer, flipBuffer, acceptBuffer] = await Promise.all([
+          loadAudioBuffer("./type.mp3"),
+          loadAudioBuffer("./flip.mp3"),
+          loadAudioBuffer("./accept.mp3"),
+        ]);
 
-      typeSound = createBufferedSound(typeBuffer);
-      flipSound = createBufferedSound(flipBuffer);
-      acceptSound = createBufferedSound(acceptBuffer);
-    }
+        typeSound = createBufferedSound(typeBuffer);
+        flipSound = createBufferedSound(flipBuffer);
+        acceptSound = createBufferedSound(acceptBuffer);
+      }
 
-    function playTypeSound() {
-      typeSound?.play();
-    }
+      function playTypeSound() {
+        typeSound?.play();
+      }
 
-    function playFlipSound() {
-      flipSound?.play();
-    }
+      function playFlipSound() {
+        flipSound?.play();
+      }
 
-    function playAcceptSound() {
-      acceptSound?.play();
-    }
+      function playAcceptSound() {
+        acceptSound?.play();
+      }
 
-    async function init() {
-      initSounds();
+      async function init() {
+        initSounds();
 
-      const container = document.getElementById("root");
-      container.innerHTML = `
+        const container = document.getElementById("root");
+        container.innerHTML = `
         <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
           ${createTitle()}
           ${createDigitForeignObject(0, 5)}
@@ -489,33 +512,33 @@
         </svg>
       `;
 
-      count = await fetchCount();
+        count = await fetchCount();
 
-      document.body.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault(); 
-          play();
-        }
-      });
-    }
+        document.body.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            play();
+          }
+        });
+      }
 
-    async function play() {
-      if(count === null) return;
+      async function play() {
+        if (count === null) return;
 
-      playAcceptSound();
-      document.getElementById("start").remove();
-      await wait(1000);
-      document.getElementById("bgm").play();
-      const targetDigits = getDigitsFixed(count);
+        playAcceptSound();
+        document.getElementById("start").remove();
+        await wait(1000);
+        document.getElementById("bgm").play();
+        const targetDigits = getDigitsFixed(count);
 
-      await wait(1000);
-      await playDigitsFadeIn();
-      await playTitleTyping();
-      await wait(1000);
-      await flip(targetDigits);
-    }
+        await wait(1000);
+        await playDigitsFadeIn();
+        await playTitleTyping();
+        await wait(1000);
+        await flip(targetDigits);
+      }
 
-    init();
-  </script>
-</body>
+      init();
+    </script>
+  </body>
 </html>
