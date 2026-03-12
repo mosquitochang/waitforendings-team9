@@ -144,20 +144,15 @@
     }
 
     #start {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 60px;
-      height: 60px;
-      border: 1px solid white;
       cursor: pointer;
-      background-color: rgba(255, 255, 255, 0);
-      transition: background-color 0.2s;
     }
 
-    #start:hover {
-      background-color: rgba(255, 255, 255, 1);
+    #start .hover-arrow {
+      opacity: 0;
+    }
+
+    #start:hover .hover-arrow {
+      opacity: 1;
     }
   </style>
 </head>
@@ -166,7 +161,6 @@
     <source src="./bgm.mp3" type="audio/mpeg">
   </audio>
   <div id="root"></div>
-  <div id="start" onclick="play()"></div>
 
   <script>
     const CELL_SIZE = 60;
@@ -180,6 +174,48 @@
     const SPRITE_URL = lang === 'sc' ? "./sprite-sc.png" : "./sprite-tc.png";
 
     let count = null;
+
+    function createStartButton() {
+      return `
+        <svg 
+          x="${15 * CELL_SIZE}"
+          y="${8 * CELL_SIZE}"
+          width="${3 * CELL_SIZE}"
+          height="${1 * CELL_SIZE}"
+          id="start"
+          onclick="play()"
+        >
+          <svg
+            x="0"
+            y="0"
+            width="${2 * CELL_SIZE}"
+            height="${1 * CELL_SIZE}"
+            viewBox="360 1080 120 60"
+          >
+            <image href="${SPRITE_URL}" width="1200" height="1140" />
+          </svg>
+          <svg
+            x="${2 * CELL_SIZE}"
+            y="0"
+            width="${1 * CELL_SIZE}"
+            height="${1 * CELL_SIZE}"
+            viewBox="480 1080 60 60"
+          >
+            <image href="${SPRITE_URL}" width="1200" height="1140" />
+          </svg>
+          <svg
+            x="${2 * CELL_SIZE}"
+            y="0"
+            width="${1 * CELL_SIZE}"
+            height="${1 * CELL_SIZE}"
+            viewBox="540 1080 60 60"
+            class="hover-arrow"
+          >
+            <image href="${SPRITE_URL}" width="1200" height="1140" />
+          </svg>
+        </svg>
+      `;
+    }
 
     function createTitle() {
       const x = 13 * CELL_SIZE;
@@ -415,13 +451,15 @@
     let flipSound;
 
     async function initSounds() {
-      const [typeBuffer, flipBuffer] = await Promise.all([
+      const [typeBuffer, flipBuffer, acceptBuffer] = await Promise.all([
         loadAudioBuffer("./type.mp3"),
         loadAudioBuffer("./flip.mp3"),
+        loadAudioBuffer("./accept.mp3"),
       ]);
 
-      typeSound = createBufferedSound(typeBuffer, 0.6);
-      flipSound = createBufferedSound(flipBuffer, 0.8);
+      typeSound = createBufferedSound(typeBuffer);
+      flipSound = createBufferedSound(flipBuffer);
+      acceptSound = createBufferedSound(acceptBuffer);
     }
 
     function playTypeSound() {
@@ -430,6 +468,10 @@
 
     function playFlipSound() {
       flipSound?.play();
+    }
+
+    function playAcceptSound() {
+      acceptSound?.play();
     }
 
     async function init() {
@@ -443,17 +485,27 @@
           ${createDigitForeignObject(1, 11)}
           ${createDigitForeignObject(2, 17)}
           ${createDigitForeignObject(3, 23)}
+          ${createStartButton()}
         </svg>
       `;
 
       count = await fetchCount();
+
+      document.body.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault(); 
+          play();
+        }
+      });
     }
 
     async function play() {
       if(count === null) return;
 
-      document.getElementById("bgm").play();
+      playAcceptSound();
       document.getElementById("start").remove();
+      await wait(1000);
+      document.getElementById("bgm").play();
       const targetDigits = getDigitsFixed(count);
 
       await wait(1000);
